@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package stackstate.sensor.api;
+
+option java_package="com.stackstate.sensor.api";
+option go_package="gitlab.com/stackvista/sts-sensor-api/sensor";
+
+import "google/protobuf/any.proto";
+
+message SensorRequest {
+  string  sensor_id = 9;
+  CheckSelector check = 2;
+  oneof request {
+    SensorCheckConfig config = 10;
+  }
+}
+
+message CheckSelector {
+  string name = 1;
+  string version = 2;
+}
+
+message SensorCheckConfig {
+  map<string, google.protobuf.Any> config = 1;
+}
