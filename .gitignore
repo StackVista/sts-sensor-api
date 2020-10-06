@@ -1,1 +1,8 @@
 generated/
+build/
+.metals/
+.gradle/
+.vscode/
+
+
+.env

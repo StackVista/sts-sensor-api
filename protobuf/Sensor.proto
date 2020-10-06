@@ -3,23 +3,37 @@ syntax = "proto3";
 package stackstate.sensor.api;
 
 option java_package="com.stackstate.sensor.api";
-option go_package="gitlab.com/stackvista/sts-sensor-api/sensor";
+option go_package="/sensor";
 
 import "google/protobuf/any.proto";
 
-message SensorRequest {
-  string  sensor_id = 1;
-  CheckSelector check = 2;
+message SensorReading {
+  string sensor_id = 1;
+  AdapterSelector adapter = 2;
   oneof request {
-    SensorCheckConfig config = 10;
+    StatefulSensorRequest stateful_request = 10;
+    SensorCheckConfig config = 20;
   }
 }
 
-message CheckSelector {
+message SensorData {
+    string id = 1;
+}
+
+message AdapterSelector {
   string name = 1;
-  string version = 2;
+  string minimum_version = 2;
+}
+
+message StatefulSensorRequest {
+  bytes state = 1;
+  SensorCheckConfig config = 2;
 }
 
 message SensorCheckConfig {
   map<string, google.protobuf.Any> config = 1;
+}
+
+service SensorService {
+    rpc Process (SensorReading) returns (SensorData) {};
 }

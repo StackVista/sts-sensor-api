@@ -1,0 +1,27 @@
+name: "StackState Sensor API - Build GoLang code"
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: '0'
+    - name: Generate GoLang proto files
+      uses: docker://znly/protoc:latest
+      with:
+        args: --go_out=plugins=grpc:/github/workspace/generated/go -I/github/workspace /github/workspace/protobuf/Sensor.proto
+    - uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        commit_message: Automatically generated GoLang files
+        file_pattern: "**/*.pb.go"
+    # - name: Bump version and push tag
+    #   uses: anothrNick/github-tag-action@1.26.0
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #     WITH_V: true
+
