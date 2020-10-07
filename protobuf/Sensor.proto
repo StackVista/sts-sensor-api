@@ -18,7 +18,7 @@ message SensorReading {
 
 message SensorData {
     string id = 1;
-    optional bytes response_data = 50;
+    bytes response_data = 50;
 }
 
 message AdapterSelector {
