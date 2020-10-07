@@ -39,12 +39,17 @@ jobs:
         tag_schema: semantic
         auto_increment_type: minor
         body: Automatically published release
+    outputs:
+      previous_tag: ${{ steps.create_release.previous_tag }}
+      current_tag: ${{ steps.create_release.current_tag }}
 
   publish-scala:
     needs: release
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+      with:
+        ref: ${{ needs.release.outputs.current_tag }}
     - name: Set up JDK 1.11
       uses: actions/setup-java@v1
       with:
