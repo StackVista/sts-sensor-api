@@ -22,11 +22,11 @@ jobs:
         commit_message: Automatically generated GoLang files
         file_pattern: "**/*.pb.go"
     outputs:
-        auto_commit: ${{ steps.git_auto_commit.changes_detected }}
+        auto_commit: ${{ steps.git_auto_commit.outputs.changes_detected }}
 
   release:
     needs: build
-    if: ${{ needs.build.outputs.auto_commit == 'true' }}
+    if: needs.build.outputs.auto_commit == 'true'
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -38,13 +38,9 @@ jobs:
         tag_schema: semantic
         auto_increment_type: minor
         body: Automatically published release
-    outputs:
-        previous_tag: ${{ steps.create_release.previous_tag }}
-        current_tag: ${{ steps.create_release.current_tag }}
 
   publish-scala:
     needs: release
-    if: needs.release.outputs.previous_tag != needs.release.outputs.current_tag
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
