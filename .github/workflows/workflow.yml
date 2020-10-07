@@ -40,8 +40,8 @@ jobs:
         auto_increment_type: minor
         body: Automatically published release
     outputs:
-      previous_tag: ${{ steps.create_release.previous_tag }}
-      current_tag: ${{ steps.create_release.current_tag }}
+      previous_tag: ${{ steps.create_release.outputs.previous_tag }}
+      current_tag: ${{ steps.create_release.outputs.current_tag }}
 
   publish-scala:
     needs: release
