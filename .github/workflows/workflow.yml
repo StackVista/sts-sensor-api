@@ -48,6 +48,8 @@ jobs:
       uses: actions/setup-java@v1
       with:
           java-version: 1.11
+    - name: Create output dir
+      run: mkdir -p generated/scala
     - name: Generate protoc
       uses: docker://ghcr.io/stackvista/scalapb
       with:
