@@ -12,7 +12,7 @@ message SensorReading {
   AdapterSelector adapter = 2;
   oneof request {
     StatefulSensorRequest stateful_request = 10;
-    SensorCheckConfig config = 20;
+    StatelessSensorRequest stateless_request = 20;
   }
 }
 
@@ -27,7 +27,11 @@ message AdapterSelector {
 
 message StatefulSensorRequest {
   bytes state = 1;
-  SensorCheckConfig config = 2;
+  SensorCheckConfig config = 10; // Left some room to add fields before
+}
+
+message StatelessSensorRequest {
+  SensorCheckConfig config = 10; // Left some room to add fields before
 }
 
 message SensorCheckConfig {
