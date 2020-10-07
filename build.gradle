@@ -1,0 +1,83 @@
+plugins {
+  id "scala"
+  id "com.jfrog.artifactory" version "4.17.2"
+  id "maven-publish"
+  id "com.adtran.scala-multiversion-plugin" version "1.0.36"
+  id 'pl.allegro.tech.build.axion-release' version '1.12.0'
+}
+
+project.version = scmVersion.version
+
+scmVersion {
+  tag {
+    prefix = 'v'
+    versionSeparator = ''
+  }
+}
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  implementation 'org.scala-lang:scala-library:%scalaversion%'
+  implementation "com.thesamet.scalapb:scalapb-runtime-grpc_%%:0.10.8"
+  implementation "com.thesamet.scalapb.zio-grpc:zio-grpc-core_%%:0.4.0"
+  implementation "io.grpc:grpc-netty:1.31.1"
+}
+
+sourceSets {
+  main {
+    scala {
+      srcDirs = ["generated/scala"]
+    }
+  }
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives sourcesJar
+}
+
+artifactoryPublish {
+    dependsOn jar
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifact (sourcesJar) {
+                classifier = 'sources'
+            }
+        }
+    }
+}
+
+if (!project.hasProperty("artifactoryUsername")) {
+  ext {
+    artifactoryUsername=System.getenv("ARTIFACTORY_USERNAME")
+    artifactoryPassword=System.getenv("ARTIFACTORY_PASSWORD")
+  }
+}
+
+artifactory {
+  publish {
+    contextUrl = 'https://artifactory.stackstate.io/artifactory'
+    repository {
+      repoKey = 'libs'
+      username = project.property("artifactoryUsername")
+      password = project.property("artifactoryPassword")
+    }
+    defaults {
+      publications ('mavenJava')
+    }
+    publishBuildInfo = true
+    publishArtifacts = true
+    publishPom = true
+  }
+}
