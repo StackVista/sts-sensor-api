@@ -77,7 +77,7 @@ artifactory {
       password = project.property("artifactoryPassword")
     }
     defaults {
-      publications ('crossBuild_212')
+      publications ('maven')
     }
     publishBuildInfo = true
     publishArtifacts = true
