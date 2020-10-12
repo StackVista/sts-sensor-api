@@ -2,23 +2,11 @@ plugins {
   id "scala"
   id "com.jfrog.artifactory" version "4.17.2"
   id "maven-publish"
-  id "com.github.prokod.gradle-crossbuild" version "0.12.0"
   id 'pl.allegro.tech.build.axion-release' version '1.12.0'
 }
 
 group = "com.stackstate.sensor"
 archivesBaseName = "sts-sensor-api"
-
-crossBuild {
-  scalaVersionsCatalog = ['2.12':'2.12.12']
-
-  builds {
-    scala {
-      scalaVersions = ['2.12']
-    }
-  }
-}
-
 
 scmVersion {
   tag {
@@ -35,8 +23,8 @@ repositories {
 
 dependencies {
   implementation 'org.scala-lang:scala-library:2.12.12'
-  implementation "com.thesamet.scalapb:scalapb-runtime-grpc_?:0.10.8"
-  implementation "com.thesamet.scalapb.zio-grpc:zio-grpc-core_?:0.4.0"
+  implementation "com.thesamet.scalapb:scalapb-runtime-grpc_2.12:0.10.8"
+  implementation "com.thesamet.scalapb.zio-grpc:zio-grpc-core_2.12:0.4.0"
   implementation "io.grpc:grpc-netty:1.31.1"
 }
 
@@ -63,13 +51,13 @@ artifactoryPublish {
 
 publishing {
     publications {
-        crossBuild_212(MavenPublication) {
+      maven(MavenPublication) {
             artifactId = 'sts-sensor-api_2.12'
-            artifact crossBuildScala_212Jar
             artifact (sourcesJar) {
-                classifier = 'sources'
+              classifier = 'sources'
             }
-        }
+            from components.java
+      }
     }
 }
 
@@ -96,5 +84,3 @@ artifactory {
     publishPom = true
   }
 }
-
-project.tasks.build.dependsOn('crossBuildScala_212Jar')
