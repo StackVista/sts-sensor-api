@@ -40,5 +40,5 @@ message SensorCheckConfig {
 }
 
 service SensorService {
-  rpc ReadSensorData (SensorReading) returns (SensorData) {};
+  rpc ReadSensor (SensorReading) returns (SensorData) {};
 }
