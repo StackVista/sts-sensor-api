@@ -5,7 +5,7 @@ package stackstate.sensor.api;
 option java_package="com.stackstate.sensor.api";
 option go_package="/sensor";
 
-import "google/protobuf/any.proto";
+import "google/protobuf/struct.proto";
 
 message SensorReading {
   string sensor_id = 1;
@@ -36,7 +36,7 @@ message StatelessSensorRequest {
 }
 
 message SensorCheckConfig {
-  map<string, google.protobuf.Any> config = 1;
+  google.protobuf.Struct config = 1;
 }
 
 service SensorService {
